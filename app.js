@@ -35,6 +35,7 @@ app.get('/', (req, res) => {
     req.session.guesses = [];
     req.session.guessesRemaining = 8;
     req.session.alreadyGuessed = false;
+    req.session.errorMessage = '';
   }
   console.log(req.session);
 
@@ -44,6 +45,22 @@ app.get('/', (req, res) => {
 
 app.post('/guess', (req, res) => {
   let userInput = req.body.guess.toUpperCase();
+
+  function isLetter(input) {
+    let letter = /^[A-Z]+$/;
+    if (input.match(letter)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  if (isLetter(userInput)) {
+    req.session.errorMessage = '';
+  } else {
+    req.session.errorMessage = 'Please enter a letter';
+    res.redirect('/');
+  }
 
   function showAnswer() {
     for (let i = 0; i < answer.length; i++) {
@@ -61,6 +78,7 @@ app.post('/guess', (req, res) => {
     }
     return false;
   };
+
   if (alreadyGuessed()) {
     req.session.alreadyGuessed = true;
     res.redirect('/');
@@ -98,12 +116,13 @@ app.post('/guess', (req, res) => {
 
 app.get('/winner', (req, res) => {
   let answer = req.session.word.join('');
+  req.session.word = '';
   res.render('winner', { answer });
 });
 
 app.get('/loser', (req, res) => {
   let answer = req.session.word.join('');
-  req.session.word === '';
+  req.session.word = '';
   res.render('loser', { answer });
 });
 

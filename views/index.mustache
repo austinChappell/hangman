@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/style.css">
   </head>
   <body>
+    <h1>{{ errorMessage }}</h1>
     <h1 id="magic-word">
       {{ #blankArr }}
       <span class="word-letter">{{ . }}</span>
@@ -20,6 +21,12 @@
       <div id="counter-div">
         <h2>Number of guesses remaining:</h2>
         <h1 id="numOfGuessRemaining">{{ guessesRemaining }}</h1>
+        <h2>Letters Guessed:</h2>
+        <h3 id="guessed-letters">
+          {{ #guesses }}
+          <span>{{ . }}</span>
+          {{ /guesses }}
+        </h3>
         <h2 id="message">
           {{ #alreadyGuessed }}
           You already guessed this letter. Guess again.
