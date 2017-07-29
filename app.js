@@ -4,6 +4,7 @@ const express = require('express'),
       session = require('express-session'),
       fs = require('file-system'),
       mustacheExpress = require('mustache-express'),
+      randomWords = require('random-words'),
       words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
 
 let port = process.env.PORT || 3000;
@@ -23,8 +24,9 @@ app.use(session({
 app.get('/', (req, res) => {
 
   if (req.session.word === '' || !req.session.word) {
-    let index = Math.floor(Math.random() * words.length);
-    req.session.word = words[index].toUpperCase().split('');
+    // let index = Math.floor(Math.random() * words.length);
+    // req.session.word = words[index].toUpperCase().split('');
+    req.session.word = randomWords().toUpperCase().split('');
     req.session.blankArr = [];
     req.session.word.forEach(function(letter) {
       req.session.blankArr.push('_');
