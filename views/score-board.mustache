@@ -3,16 +3,29 @@
   <head>
     <meta charset="utf-8">
     <title></title>
+    <link rel="stylesheet" href="/style.css">
   </head>
   <body>
-    <h1>Leaderboard</h1>
-    <ol>
-      {{ #leaderboard }}
-      <li>
-        <strong>{{ name }}</strong> - {{ score }}
-      </li>
+    <div class="header">
+      <ul>
+        <li><a href="/">Mystery Game</a></li>
+        <li><a href="/scoreboard">Leaderboard</a></li>
+      </ul>
+    </div>
 
-      {{ /leaderboard }}
-    </ol>
+    <div class="container">
+      <h1>Leaderboard</h1>
+      <ol class="leaderboard">
+        {{ #leaderboard }}
+        <li>
+          <strong>{{ name }}</strong> - {{ score }}
+        </li>
+
+        {{ /leaderboard }}
+      </ol>
+      <a href="/playagain">Play Again</a>
+
+    </div>
+
   </body>
 </html>
