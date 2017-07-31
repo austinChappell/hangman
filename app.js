@@ -14,7 +14,6 @@ mongoose.connect('mongodb://localhost/hangman');
 
 let winnerSchema = new mongoose.Schema({
   name: String,
-  image: String,
   score: Number
 });
 
@@ -50,13 +49,13 @@ app.get('/', (req, res) => {
   if (req.session.beginGame === true) {
     if (req.session.difficulty === 'easy') {
       getNewWord(4, 6);
-      req.session.maxScore = 2500;
+      req.session.maxScore = 1500;
     } else if (req.session.difficulty === 'medium') {
       getNewWord(6, 8);
       req.session.maxScore = 2000;
     } else {
       getNewWord(8);
-      req.session.maxScore = 1500;
+      req.session.maxScore = 2500;
     }
     req.session.beginGame = false;
     req.session.playing = true;
