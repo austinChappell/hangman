@@ -3,22 +3,22 @@ const express = require('express'),
       bodyParser = require('body-parser'),
       session = require('express-session'),
       fs = require('file-system'),
-      // mongoose = require('mongoose');
+      mongoose = require('mongoose');
       mustacheExpress = require('mustache-express'),
       randomWords = require('random-words'),
       words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
 
 let port = process.env.PORT || 3000;
 
-// mongoose.connect('mongodb://localhost/hangman');
-//
-// let winnerSchema = new mongoose.Schema({
-//   name: String,
-//   image: String,
-//   score: Number
-// });
-//
-// let Winner = mongoose.model('Winner', winnerSchema);
+mongoose.connect('mongodb://localhost/hangman');
+
+let winnerSchema = new mongoose.Schema({
+  name: String,
+  image: String,
+  score: Number
+});
+
+let Winner = mongoose.model('Winner', winnerSchema);
 
 app.engine('mustache', mustacheExpress());
 
@@ -55,7 +55,7 @@ app.get('/', (req, res) => {
     }
     req.session.beginGame = false;
     req.session.playing = true;
-    // req.session.didWin = false;
+    req.session.didWin = false;
     req.session.blankArr = [];
     req.session.word.forEach(function(letter) {
       req.session.blankArr.push('_');
@@ -77,7 +77,7 @@ app.get('/', (req, res) => {
 
   if (req.session.blanksRemaining === 0) {
     req.session.gameOverMsg = `You win! Do you want to play again?`;
-    // req.session.didWin = true;
+    req.session.didWin = true;
     clearGame();
   }
 
@@ -159,33 +159,33 @@ app.get('/playagain', (req, res) => {
   req.session.guessesRemaining = 8;
   res.redirect('/');
 });
-//
-// app.get('/addScore', (req, res) => {
-//   res.render('add-score');
-// });
-//
-// app.post('/scoreBoard', (req, res) => {
-//   let name = req.body.name;
-//   let image = req.body.image;
-//   let score = req.session.score;
-//   let user = Winner.create({
-//     name,
-//     image,
-//     score
-//   });
-//   res.redirect('/scoreBoard');
-// });
-//
-// app.get('/scoreBoard', (req, res) => {
-//   Winner.find({}, (err, winners) => {
-//     if (err) {
-//       console.log(err);
-//     } else {
-//       console.log(winners);
-//       res.render('score-board', winners);
-//     }
-//   });
-// });
+
+app.get('/addScore', (req, res) => {
+  res.render('add-score');
+});
+
+app.post('/scoreBoard', (req, res) => {
+  let name = req.body.name;
+  let image = req.body.image;
+  let score = req.session.score;
+  let user = Winner.create({
+    name,
+    image,
+    score
+  });
+  res.redirect('/scoreBoard');
+});
+
+app.get('/scoreBoard', (req, res) => {
+  Winner.find({}, (err, winners) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(winners);
+      res.render('score-board', winners);
+    }
+  });
+});
 
 app.get('/:difficulty', (req, res) => {
   req.session.difficulty = req.params.difficulty;
