@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Hangman</title>
     <link rel="stylesheet" href="/style.css">
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
   </head>
   <body>
     {{ ^difficultyChosen }}
@@ -33,6 +34,9 @@
         {{ ^playing }}
         <h3>{{ gameOverMsg }}</h3>
         <a href="/playagain">Play Again</a>
+        {{ #didWin }}
+        <a href="/addScore">Add Score to Leaderboard</a>
+        {{ /didWin }}
         {{ /playing }}
       </div>
       <div class="">
