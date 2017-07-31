@@ -82,7 +82,7 @@ app.get('/', (req, res) => {
 
   if (req.session.blanksRemaining === 0) {
     let score = Math.round(req.session.score);
-    req.session.gameOverMsg = `You win! Your score is ${ score }. Do you want to play again?`;
+    req.session.gameOverMsg = `You win! Your score is ${ score }. Do you want to play again or add your score to the leader board?`;
     req.session.didWin = true;
     clearGame();
   }
@@ -172,7 +172,7 @@ app.get('/addScore', (req, res) => {
   res.render('add-score');
 });
 
-app.post('/scoreBoard', (req, res) => {
+app.post('/scoreboard', (req, res) => {
   let name = req.body.name;
   let image = req.body.image;
   let score = Math.round(req.session.score);
@@ -184,16 +184,21 @@ app.post('/scoreBoard', (req, res) => {
     image,
     score
   });
-  res.redirect('/scoreBoard');
+  res.redirect('/scoreboard');
 });
 
-app.get('/scoreBoard', (req, res) => {
+app.get('/scoreboard', (req, res) => {
   Winner.find({}, (err, winners) => {
     if (err) {
       console.log(err);
     } else {
       console.log(winners);
-      res.render('score-board', winners);
+      // SORT ARRAY FROM HIGH SCORE TO LOW SCORE
+      winners.sort(function(a, b) {
+        return b.score - a.score;
+      });
+      let data = {leaderboard: winners}
+      res.render('score-board', data);
     }
   });
 });
