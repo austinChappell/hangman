@@ -39,6 +39,8 @@ app.get('/', (req, res) => {
     if (req.session.word.length < min || req.session.word.length > max) {
       getNewWord(min, max);
     }
+    req.session.scoreDivider = req.session.word.length;
+    req.session.score = 0;
   }
 
   if (req.session.difficultyChosen === false) {
@@ -48,10 +50,13 @@ app.get('/', (req, res) => {
   if (req.session.beginGame === true) {
     if (req.session.difficulty === 'easy') {
       getNewWord(4, 6);
+      req.session.maxScore = 2500;
     } else if (req.session.difficulty === 'medium') {
       getNewWord(6, 8);
+      req.session.maxScore = 2000;
     } else {
       getNewWord(8);
+      req.session.maxScore = 1500;
     }
     req.session.beginGame = false;
     req.session.playing = true;
@@ -76,7 +81,8 @@ app.get('/', (req, res) => {
   }
 
   if (req.session.blanksRemaining === 0) {
-    req.session.gameOverMsg = `You win! Do you want to play again?`;
+    let score = Math.round(req.session.score);
+    req.session.gameOverMsg = `You win! Your score is ${ score }. Do you want to play again?`;
     req.session.didWin = true;
     clearGame();
   }
@@ -140,6 +146,7 @@ app.post('/guess', (req, res) => {
     if (userInput === answer[i]) {
       req.session.blankArr[i] = answer[i];
       req.session.blanksRemaining--;
+      req.session.score += Math.round(req.session.maxScore / req.session.scoreDivider);
       isCorrect = true;
     }
   };
@@ -148,6 +155,7 @@ app.post('/guess', (req, res) => {
   } else {
     req.session.incorrectCount++;
     req.session.guessesRemaining--;
+    req.session.scoreDivider++;
   }
 
   res.redirect('/');
@@ -167,7 +175,10 @@ app.get('/addScore', (req, res) => {
 app.post('/scoreBoard', (req, res) => {
   let name = req.body.name;
   let image = req.body.image;
-  let score = req.session.score;
+  let score = Math.round(req.session.score);
+  if (score > req.session.maxScore) {
+    score = req.session.maxScore;
+  }
   let user = Winner.create({
     name,
     image,

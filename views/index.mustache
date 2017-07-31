@@ -7,12 +7,14 @@
     <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
   </head>
   <body>
+
     {{ ^difficultyChosen }}
     <h2>Welcome to the Mystery Word Game! Please choose your level of difficulty.</h2>
     <a href="/easy">EASY</a>
     <a href="/medium">MEDIUM</a>
     <a href="/hard">HARD</a>
     {{ /difficultyChosen }}
+
     {{ #difficultyChosen }}
     <div class="container">
       <div id="counter-div">
@@ -21,23 +23,37 @@
       </div>
       <h1 id="game-title">Mystery Word</h1>
       <h1 id="magic-word">
+
         {{ #blankArr }}
+
         <span class="word-letter">{{ . }}</span>
+
         {{ /blankArr }}
+
       </h1>
       <div class="guess-div">
+
         {{ #playing }}
+
         <form class="" action="/guess" method="POST">
           <input type="text" name="guess" maxlength="1" autofocus />
         </form>
+
+        <h1>Score: {{ score }}</h1>
+
         {{ /playing }}
+
         {{ ^playing }}
+
         <h3>{{ gameOverMsg }}</h3>
         <a href="/playagain">Play Again</a>
+
         {{ #didWin }}
         <a href="/addScore">Add Score to Leaderboard</a>
         {{ /didWin }}
+
         {{ /playing }}
+
       </div>
       <div class="">
           <h2 id="message">
@@ -49,5 +65,6 @@
       </div>
     </div>
     {{ /difficultyChosen }}
+
   </body>
 </html>
