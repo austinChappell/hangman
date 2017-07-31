@@ -1,9 +1,15 @@
 body {
   text-align: center;
+  background: #EEE;
+}
+
+.container {
+  width: 80%;
+  margin: 0 auto;
 }
 
 #magic-word {
-  color: red;
+  color: #EB7F00;
   text-align: center;
   margin-top: 80px;
   font-size: 26px;
@@ -15,4 +21,28 @@ h1 {
 
 h2 {
   text-align: center;
+}
+
+#counter-div {
+  display: flex;
+  justify-content: space-between;
+}
+
+#counter-div h2 {
+  flex-basis: 35%;
+  text-align: left;
+}
+
+a {
+  background: #1695A3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 1px 1px 2px gray;
+  text-decoration: none;
+  padding: 5px 10px;
+}
+
+a:hover {
+  background: #225378;
 }

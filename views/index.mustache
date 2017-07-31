@@ -6,33 +6,44 @@
     <link rel="stylesheet" href="/style.css">
   </head>
   <body>
-    <h1>{{ errorMessage }}</h1>
-    <h1 id="magic-word">
-      {{ #blankArr }}
-      <span class="word-letter">{{ . }}</span>
-      {{ /blankArr }}
-    </h1>
-    <div class="guess-div">
-      <form class="" action="/guess" method="POST">
-        <input type="text" name="guess" maxlength="1" autofocus />
-      </form>
-    </div>
-    <div class="">
+    {{ ^difficultyChosen }}
+    <h2>Welcome to the Mystery Word Game! Please choose your level of difficulty.</h2>
+    <a href="/easy">EASY</a>
+    <a href="/medium">MEDIUM</a>
+    <a href="/hard">HARD</a>
+    {{ /difficultyChosen }}
+    {{ #difficultyChosen }}
+    <div class="container">
       <div id="counter-div">
-        <h2>Number of guesses remaining:</h2>
-        <h1 id="numOfGuessRemaining">{{ guessesRemaining }}</h1>
-        <h2>Letters Guessed:</h2>
-        <h3 id="guessed-letters">
-          {{ #guesses }}
-          <span>{{ . }}</span>
-          {{ /guesses }}
-        </h3>
-        <h2 id="message">
-          {{ #alreadyGuessed }}
-          You already guessed this letter. Guess again.
-          {{ /alreadyGuessed }}
-        </h2>
+        <h2>Number of guesses remaining: <span id="numOfGuessRemaining">{{ guessesRemaining }}</span></h2>
+        <h2>Letters Guessed: <span id="guessed-letters">{{ #guesses }}<span>{{ . }}, </span>{{ /guesses }}</span></h2>
+      </div>
+      <h1 id="game-title">Mystery Word</h1>
+      <h1 id="magic-word">
+        {{ #blankArr }}
+        <span class="word-letter">{{ . }}</span>
+        {{ /blankArr }}
+      </h1>
+      <div class="guess-div">
+        {{ #playing }}
+        <form class="" action="/guess" method="POST">
+          <input type="text" name="guess" maxlength="1" autofocus />
+        </form>
+        {{ /playing }}
+        {{ ^playing }}
+        <h3>{{ gameOverMsg }}</h3>
+        <a href="/playagain">Play Again</a>
+        {{ /playing }}
+      </div>
+      <div class="">
+          <h2 id="message">
+            {{ #alreadyGuessed }}
+            You already guessed this letter. Guess again.
+            {{ /alreadyGuessed }}
+          </h2>
+          <h1>{{ errorMessage }}</h1>
       </div>
     </div>
+    {{ /difficultyChosen }}
   </body>
 </html>

@@ -23,10 +23,27 @@ app.use(session({
 
 app.get('/', (req, res) => {
 
-  if (req.session.word === '' || !req.session.word) {
-    // let index = Math.floor(Math.random() * words.length);
-    // req.session.word = words[index].toUpperCase().split('');
+  function getNewWord(min, max) {
     req.session.word = randomWords().toUpperCase().split('');
+    if (req.session.word.length < min || req.session.word.length > max) {
+      getNewWord(min, max);
+    }
+  }
+
+  if (req.session.difficultyChosen === false) {
+    req.session.beginGame = false;
+  };
+
+  if (req.session.beginGame === true) {
+    if (req.session.difficulty === 'easy') {
+      getNewWord(4, 6);
+    } else if (req.session.difficulty === 'medium') {
+      getNewWord(6, 8);
+    } else {
+      getNewWord(8);
+    }
+    req.session.beginGame = false;
+    req.session.playing = true;
     req.session.blankArr = [];
     req.session.word.forEach(function(letter) {
       req.session.blankArr.push('_');
@@ -40,6 +57,22 @@ app.get('/', (req, res) => {
     req.session.errorMessage = '';
   }
   console.log(req.session);
+
+  function clearGame() {
+    req.session.playing = false;
+    req.session.word = '';
+  }
+
+  if (req.session.blanksRemaining === 0) {
+    req.session.gameOverMsg = `You win! Do you want to play again?`;
+    clearGame();
+  }
+
+  if (req.session.guessesRemaining === 0) {
+    let answer = req.session.word.join('');
+    req.session.gameOverMsg = `You lose. The word was ${ answer }.`;
+    clearGame();
+  }
 
   res.render('index', req.session);
 
@@ -104,28 +137,21 @@ app.post('/guess', (req, res) => {
     req.session.guessesRemaining--;
   }
 
-  if (req.session.blanksRemaining === 0) {
-    res.redirect('/winner');
-  }
-
-  if (req.session.guessesRemaining === 0) {
-    res.redirect('/loser');
-  }
-
   res.redirect('/');
 
 });
 
-app.get('/winner', (req, res) => {
-  let answer = req.session.word.join('');
-  req.session.word = '';
-  res.render('winner', { answer });
+app.get('/playagain', (req, res) => {
+  req.session.difficultyChosen = false;
+  req.session.guessesRemaining = 8;
+  res.redirect('/');
 });
 
-app.get('/loser', (req, res) => {
-  let answer = req.session.word.join('');
-  req.session.word = '';
-  res.render('loser', { answer });
+app.get('/:difficulty', (req, res) => {
+  req.session.difficulty = req.params.difficulty;
+  req.session.beginGame = true;
+  req.session.difficultyChosen = true;
+  res.redirect('/');
 });
 
 app.listen(port, () => {
