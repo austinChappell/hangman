@@ -1,15 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
+const Winner = require('../models/winners');
 
 let postData = {};
-
-let winnerSchema = new mongoose.Schema({
-  name: String,
-  score: Number
-});
-
-let Winner = mongoose.model('Winner', winnerSchema);
 
 router.get('/', (req, res) => {
 
