@@ -19,6 +19,9 @@
         <input type="text" name="name" placeholder="Name" />
         <input id="score-submit-btn" type="submit" value="Add Your Score">
       </form>
+      {{ #errors }}
+      <h3>{{ msg }}</h3>
+      {{ /errors }}
     </div>
 
 

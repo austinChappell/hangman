@@ -12,6 +12,7 @@
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "express-session": "^1.15.4",
+    "express-validator": "^3.2.1",
     "file-system": "^2.2.2",
     "mongoose": "^4.11.5",
     "mustache-express": "^1.2.5",
